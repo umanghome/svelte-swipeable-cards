@@ -17,7 +17,7 @@ onMount(async () => {
 
 <main>
   {#if character}
-    <Card {character} />
+    <Card --avatar={`url(${character.image})`} {character} />
   {/if}
 </main>
 

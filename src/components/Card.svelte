@@ -52,7 +52,7 @@
 </script>
 
 <div class="card" use:swipeAction on:swiping={swipingHandler} style={styles} on:swiperelease={releaseHandler} on:swipecancel={cancelHandler}>
-  <div class="avatar" style={`--avatar: url(${character.image});`}></div>
+  <div class="avatar"></div>
   <div class="description">
     <h2 class="name">{character.name}</h2>
     <div class="species">{character.gender}, {character.species}</div>
