@@ -1,24 +1,9 @@
 <script>
-import { onMount } from "svelte";
-import Card from "./components/Card.svelte";
-
-import { getCharacters } from "./lib/characters";
-
-let characters = [];
-let index = 0;
-
-$: character = characters[index];
-
-onMount(async () => {
-  characters = await getCharacters();
-});
-
+  import Characters from "./components/Characters.svelte";
 </script>
 
 <main>
-  {#if character}
-    <Card --avatar={`url(${character.image})`} {character} />
-  {/if}
+  <Characters />
 </main>
 
 <style>
@@ -37,7 +22,7 @@ onMount(async () => {
   main {
     height: 100%;
     width: 100%;
-    
+
     padding: 2em;
 
     display: flex;
