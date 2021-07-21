@@ -1,19 +1,19 @@
 <script>
-  import { cubicOut } from 'svelte/easing';
   import { onMount } from 'svelte';
 
   import { getCharacters } from '../lib/characters';
   import Card from './Card.svelte';
-  import { discard, restack } from '../lib/transitions';
+  import { scale, discard, restack } from '../lib/transitions';
 
   let characters = [];
   let index = 0;
 
   $: charactersToRender =
     characters.length > 0
-      ? index === characters.length - 1
-        ? [characters[index], characters[0]]
-        : [characters[index], characters[index + 1]]
+      ? [
+          characters[index % characters.length],
+          characters[(index % characters.length) + 1],
+        ].filter(Boolean)
       : [];
 
   onMount(async () => {
@@ -21,25 +21,7 @@
   });
 
   function swiped() {
-    if (index === characters.length - 1) {
-      index = 0;
-    } else {
-      index = index + 1;
-    }
-  }
-
-  function scale(node, { from, to }, params) {
-    const dx = from.left - to.left;
-    const dy = from.top - to.top;
-
-    const d = Math.sqrt(dx * dx + dy * dy);
-
-    return {
-      delay: 0,
-      duration: Math.sqrt(d) * 60,
-      easing: cubicOut,
-      css: (t, u) => `transform: scale(${0.8 + t * 0.2});`,
-    };
+    index = index + 1;
   }
 </script>
 

@@ -1,3 +1,4 @@
+import { cubicOut } from 'svelte/easing';
 import { fly } from 'svelte/transition';
 
 export function discard(node, params = {}) {
@@ -20,5 +21,19 @@ export function restack(node, params = {}) {
         opacity: ${t};
       `;
     },
+  };
+}
+
+export function scale(node, { from, to }, params) {
+  const dx = from.left - to.left;
+  const dy = from.top - to.top;
+
+  const d = Math.sqrt(dx * dx + dy * dy);
+
+  return {
+    delay: 0,
+    duration: Math.sqrt(d) * 60,
+    easing: cubicOut,
+    css: (t, u) => `transform: scale(${0.8 + t * 0.2});`,
   };
 }
