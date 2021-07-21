@@ -1,9 +1,9 @@
 <script>
-  import { fade, fly } from 'svelte/transition';
-
   import SwipeListener from 'swipe-listener';
 
   export let character;
+  export let leftTransition;
+  export let rightTransition;
 
   function swipeAction(node) {
     const listener = SwipeListener(node, {
@@ -50,14 +50,6 @@
     resetStyles();
   }
 
-  function releaseHandler(event) {
-    const direction = getDirection(event);
-
-    if (direction === 'right') {
-      resetStyles();
-    }
-  }
-
   function setStyles(arr) {
     styles = arr.join('; ');
   }
@@ -82,9 +74,11 @@
     const angle = getAngleFromMatrix(matrix);
 
     if (angle < 0) {
-      return fly(node, { ...params, duration: 100, x: -100 });
+      // Swipe left
+      return leftTransition(node, { angle, ...params });
     } else {
-      return fade(node, params);
+      // Swipe right
+      return rightTransition(node, { angle, ...params });
     }
   }
 </script>
@@ -94,7 +88,6 @@
   use:swipeAction
   on:swiping={swipingHandler}
   style={styles}
-  on:swiperelease={releaseHandler}
   on:swipecancel={cancelHandler}
   on:swipe
   out:discard

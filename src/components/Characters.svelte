@@ -4,6 +4,7 @@
 
   import { getCharacters } from '../lib/characters';
   import Card from './Card.svelte';
+  import { discard, restack } from '../lib/transitions';
 
   let characters = [];
   let index = 0;
@@ -47,6 +48,8 @@
     <div class="character" animate:scale>
       <Card
         --avatar={`url(${character.image})`}
+        leftTransition={discard}
+        rightTransition={restack}
         {character}
         on:swipe={swiped}
       />
