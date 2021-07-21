@@ -1,9 +1,10 @@
 <script>
   import SwipeListener from 'swipe-listener';
 
-  export let character;
   export let leftTransition;
   export let rightTransition;
+  export let leftTransitionParams = {};
+  export let rightTransitionParams = {};
 
   function swipeAction(node) {
     const listener = SwipeListener(node, {
@@ -61,10 +62,10 @@
   let styles = '';
 
   function getAngleFromMatrix(matrix) {
-    var values = matrix.split('(')[1].split(')')[0].split(',');
-    var a = values[0];
-    var b = values[1];
-    var angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
+    const values = matrix.split('(')[1].split(')')[0].split(',');
+    const a = values[0];
+    const b = values[1];
+    const angle = Math.round(Math.atan2(b, a) * (180 / Math.PI));
 
     return angle;
   }
@@ -75,10 +76,18 @@
 
     if (angle < 0) {
       // Swipe left
-      return leftTransition(node, { angle, ...params });
+      return leftTransition(node, {
+        ...params,
+        ...leftTransitionParams,
+        angle,
+      });
     } else {
       // Swipe right
-      return rightTransition(node, { angle, ...params });
+      return rightTransition(node, {
+        ...params,
+        ...rightTransitionParams,
+        angle,
+      });
     }
   }
 </script>
@@ -92,48 +101,11 @@
   on:swipe
   out:discard
 >
-  <div class="avatar" />
-  <div class="description">
-    <h2 class="name">{character.name}</h2>
-    <div class="species">{character.gender}, {character.species}</div>
-    <div class="status">{character.status}</div>
-  </div>
+  <slot />
 </div>
 
 <style>
   .card {
-    --border-radius: 8px;
-
-    background-color: white;
-    display: flex;
-    flex-direction: column;
     transform-origin: center 200%;
-  }
-
-  .avatar {
-    background-image: var(--avatar);
-    height: 300px;
-    width: 300px;
-
-    border-top-left-radius: var(--border-radius);
-    border-top-right-radius: var(--border-radius);
-  }
-
-  .description {
-    padding: 0.5em 1em;
-    border: 1px solid black;
-
-    border-bottom-left-radius: var(--border-radius);
-    border-bottom-right-radius: var(--border-radius);
-  }
-
-  h2 {
-    margin: 0;
-    margin-bottom: 0.2em;
-  }
-
-  .species,
-  .status {
-    color: #848484;
   }
 </style>
