@@ -7,21 +7,37 @@
 
   let characters = [];
   let index = 0;
+  let loading = true;
 
   $: charactersToRender =
     characters.length > 0
-      ? [
-          characters[index % characters.length],
-          characters[(index % characters.length) + 1],
-        ].filter(Boolean)
+      ? [characters[getSaneIndex()], characters[getSaneIndex() + 1]].filter(
+          Boolean
+        )
       : [];
+
+  function getSaneIndex() {
+    return index % characters.length;
+  }
 
   onMount(async () => {
     characters = await getCharacters();
+    loading = false;
   });
 
-  function swiped() {
-    index = index + 1;
+  function swiped(event) {
+    const { left, right } = event.detail.directions;
+
+    const character = characters[getSaneIndex()];
+
+    // Remove character
+    characters.splice(index, 1);
+
+    if (left) {
+      characters = [...characters];
+    } else if (right) {
+      characters = [...characters, character];
+    }
   }
 </script>
 
@@ -48,6 +64,10 @@
         </div>
       </Card>
     </div>
+  {:else}
+    {#if !loading}
+      <h2 class="empty">Out of characters :(</h2>
+    {/if}
   {/each}
 </div>
 
@@ -101,5 +121,9 @@
   .species,
   .status {
     color: #848484;
+  }
+
+  .empty {
+    text-align: center;
   }
 </style>
